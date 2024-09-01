@@ -15,50 +15,65 @@ import random
 
 
 ''' Definindo seus atributos '''
-pontos_livres = 27
-atributos = {'força': 10, 'destreza': 10, 'constituicao': 10, 'inteligencia': 10, 'sabedoria': 10, 'carisma': 10}
-escolha_atributos = None
-remover_adicionar = None
-
-while escolha_atributos != 'sair':
-    remover_adicionar = None
-    escolha_atributos = None
+def exibir_atributos(atributos: dict, pontos_livres: int) -> str:
     print('---Vamos definir seus atributos---')
     print(f'Você possui {pontos_livres} para distribuir nesses atributos')
-    print(f'Força: {atributos['força']}')
-    print(f'Destreza: {atributos['destreza']}')
-    print(f'Constituição: {atributos['constituicao']}')
-    print(f'Inteligência: {atributos['inteligencia']}')
-    print(f'Sabedoria: {atributos['sabedoria']}')
-    print(f'Carisma: {atributos['carisma']}')
+    for atributo, valor in atributos.items():
+        print(f'{atributo.capitalize()}: {valor}')
     print(f'[Sair] Escolha feita (Pontos não usados serão perdidos)')
-    escolha_atributos = input('Digite o nome do atributo escolhido: ')
-    escolha_atributos = escolha_atributos.lower()
 
-    if escolha_atributos in atributos:
-        while remover_adicionar != 'remover' and remover_adicionar != 'adicionar':
-            print(f'---{escolha_atributos}---')
-            print(f'Você possui {atributos[escolha_atributos]} em {escolha_atributos}')
-            print(f'Você possui {pontos_livres} para gastar')
-            print(f'Você quer remover ou adicionar pontos?')    #Colocar minimo de 10 pontos e máximo de 20 pontos
-            remover_adicionar = input('Escolha: ')
-            remover_adicionar = remover_adicionar.lower()
-        if remover_adicionar == 'adicionar':
-            print(f'Quantos pontos de {pontos_livres} você quer adicionar em {atributos[escolha_atributos]}?')
-            quantidade_atributo = int(input('Escolha: '))
-            if pontos_livres-quantidade_atributo >= 0:
-                atributos[escolha_atributos] += quantidade_atributo
-                pontos_livres -= quantidade_atributo
-            else:
-                print('Pontos livres insuficientes')
-        if remover_adicionar == 'remover':
-            print(f'Quantos pontos de {pontos_livres} você quer remover em {atributos[escolha_atributos]}?')
-            quantidade_atributo = int(input('Escolha: '))
-            if atributos[escolha_atributos]-quantidade_atributo >= 0:
-                atributos[escolha_atributos] -= quantidade_atributo
-                pontos_livres += quantidade_atributo
-            else:
-                print('Pontos de atributos insuficientes')
+def escolher_atributo(atributos: dict) -> str:
+    escolha_atributos = input('Digite o nome do atributo escolhido: ').lower()
+    if escolha_atributos in atributos or escolha_atributos == 'sair':
+        return escolha_atributos
+    else:
+        print("Atributo inválido. Tente novamente.")
+        return None
 
+def escolher_acao() -> str:
+    remover_adicionar = None
+    while remover_adicionar not in ['remover', 'adicionar']:
+        remover_adicionar = input('Você quer remover ou adicionar pontos? ').lower()
+    return remover_adicionar
+
+def adicionar_pontos(atributos: dict, escolha_atributos: str, pontos_livres: int) -> int:
+    quantidade_atributo = int(input(f'Quantos pontos de {pontos_livres} você quer adicionar em {atributos[escolha_atributos]}? '))
+    if pontos_livres - quantidade_atributo >= 0:
+        atributos[escolha_atributos] += quantidade_atributo
+        pontos_livres -= quantidade_atributo
+    else:
+        print('Pontos livres insuficientes')
+    return pontos_livres
+
+def remover_pontos(atributos: dict, escolha_atributos: str, pontos_livres: int) -> int:
+    quantidade_atributo = int(input(f'Quantos pontos de {pontos_livres} você quer remover em {atributos[escolha_atributos]}? '))
+    if atributos[escolha_atributos] - quantidade_atributo >= 0:
+        atributos[escolha_atributos] -= quantidade_atributo
+        pontos_livres += quantidade_atributo
+    else:
+        print('Pontos de atributos insuficientes')
+    return pontos_livres
+
+def main_atr() -> dict:
+    pontos_livres = 27
+    atributos = {'força': 10, 'destreza': 10, 'constituicao': 10, 'inteligencia': 10, 'sabedoria': 10, 'carisma': 10}
+    escolha_atributos = None
+
+    while escolha_atributos != 'sair':
+        exibir_atributos(atributos, pontos_livres)
+        escolha_atributos = escolher_atributo(atributos)
+        
+        if escolha_atributos != 'sair':
+            acao = escolher_acao()
+            
+            if acao == 'adicionar':
+                pontos_livres = adicionar_pontos(atributos, escolha_atributos, pontos_livres)
+            elif acao == 'remover':
+                pontos_livres = remover_pontos(atributos, escolha_atributos, pontos_livres)
+    
+    print("Distribuição de pontos finalizada!")
+    print(f"Atributos finais: {atributos}")
+
+main_atr()
 
 print('Atributos escolhidos')
