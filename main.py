@@ -2,8 +2,6 @@ import random
 import warrior
 import easy
 
-print(warrior.warrior_dados)
-
 ''' Definindo sua classe '''
 op_classes = ['guerreiro']
 escolha_classe = None
