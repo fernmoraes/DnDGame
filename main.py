@@ -1,6 +1,9 @@
 import random
 import warrior
 import easy
+escolha_arma = None
+
+
 
 ''' Definindo sua classe '''
 op_classes = ['guerreiro']
@@ -38,14 +41,20 @@ def escolher_acao() -> str:
         remover_adicionar = input('Você quer remover ou adicionar pontos? ').lower()
     return remover_adicionar
 
-def adicionar_pontos(atributos: dict, escolha_atributos: str, pontos_livres: int) -> int:
+def adicionar_pontos(atributos, escolha_atributos, pontos_livres):
     quantidade_atributo = int(input(f'Quantos pontos de {pontos_livres} você quer adicionar em {atributos[escolha_atributos]}? '))
-    if pontos_livres - quantidade_atributo >= 0:
+    
+    # Verifica se o valor final ultrapassaria 20
+    if atributos[escolha_atributos] + quantidade_atributo > 20:
+        print(f'Não é possível adicionar essa quantidade. {escolha_atributos.capitalize()} não pode ultrapassar 20.')
+    elif pontos_livres - quantidade_atributo >= 0:
         atributos[escolha_atributos] += quantidade_atributo
         pontos_livres -= quantidade_atributo
     else:
         print('Pontos livres insuficientes')
+    
     return pontos_livres
+
 
 def remover_pontos(atributos: dict, escolha_atributos: str, pontos_livres: int) -> int:
     quantidade_atributo = int(input(f'Quantos pontos de {pontos_livres} você quer remover em {atributos[escolha_atributos]}? '))
@@ -78,4 +87,13 @@ def main_atr() -> dict:
 
 main_atr()
 
-print('Atributos escolhidos')
+# Escolhendo arma
+
+while escolha_arma not in warrior.armas:
+    print('---Escolha sua arma---')
+    print(f'Espada Curta | 1d6')
+    print(f'Espada Grande | 2d6')
+    print(f'Espada Longa | 1d10')
+    escolha_arma = input('Insira o nome da sua arma: ').title()
+
+print(escolha_arma)
