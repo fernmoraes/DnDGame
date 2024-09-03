@@ -1,17 +1,21 @@
 import random
+import warrior
+import easy
 
-# ''' Definindo sua classe '''
-# op_classes = ['guerreiro']
-# escolha_classe = None
+print(warrior.warrior_dados)
 
-# while escolha_classe not in op_classes:
-#     print('---Escolha sua Classe---')
-#     print('Guerreiro')
-#     print('Futuramente mais')
-#     escolha_classe = input('Minha classe será: ')
-#     escolha_classe = escolha_classe.lower()
+''' Definindo sua classe '''
+op_classes = ['guerreiro']
+escolha_classe = None
 
-# print(f'Sua classe será {escolha_classe}')
+while escolha_classe not in op_classes:
+    print('---Escolha sua Classe---')
+    print('Guerreiro')
+    print('Futuramente mais')
+    escolha_classe = input('Minha classe será: ')
+    escolha_classe = escolha_classe.lower()
+
+print(f'Sua classe será {escolha_classe}')
 
 
 ''' Definindo seus atributos '''
