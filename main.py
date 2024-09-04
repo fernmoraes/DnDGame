@@ -29,9 +29,9 @@ def exibir_atributos(atributos: dict, pontos_livres: int) -> str:
 
 def escolher_atributo(atributos: dict) -> str:
     escolha_atributos = None
-    while escolha_atributos not in atributos or escolha_atributos == 'sair':
+    while escolha_atributos not in atributos and escolha_atributos != 'sair':
         escolha_atributos = input('Digite o nome do atributo escolhido: ').lower()
-        if escolha_atributos not in atributos:
+        if escolha_atributos not in atributos and escolha_atributos != 'sair':
             print('Opção incorreta')
     return escolha_atributos
 
@@ -56,7 +56,6 @@ def adicionar_pontos(atributos, escolha_atributos, pontos_livres):
         print('Pontos livres insuficientes')
     
     return pontos_livres
-
 
 def remover_pontos(atributos: dict, escolha_atributos: str, pontos_livres: int) -> int:
     quantidade_atributo = int(input(f'Quantos pontos de {pontos_livres} você quer remover em {atributos[escolha_atributos]}? '))
@@ -86,9 +85,9 @@ def main_atr() -> dict:
     
     print("Distribuição de pontos finalizada!")
     print(f"Atributos finais: {atributos}")
+    return atributos
 
-main_atr()
-
+atributos = main_atr()
 # Escolhendo arma
 
 while escolha_arma not in warrior.armas:
@@ -101,9 +100,32 @@ while escolha_arma not in warrior.armas:
 # Comece o combate
 
 print('---Que o combate comece---')
-inimigo = easy.randomizar_inimigo()
-vida_inimigo = inimigo[1]
-armadura_inimigo = inimigo[2]
+def escolher_easy() -> list:
+    inimigo = easy.randomizar_inimigo()
+    return inimigo
+
+def iniciativa(destreza: int) -> int:
+    des_calculada = (destreza - 10) / 2
+    rolagem = random.randint(1, 20)
+    iniciativa = des_calculada + rolagem
+    return iniciativa
+
+def iniciativa_inimigo(destreza_inimigo: int) -> int:
+    rolagem = random.randint(1, 20)
+    iniciativa = rolagem + destreza_inimigo
+    return iniciativa
+
+def primeira_acao(iniciativa_player: int, iniciativa_inimigo: int) -> str:
+    if iniciativa_player >= iniciativa_inimigo:
+        primeira_acao = 'player'
+    else:
+        primeira_acao = 'inimigo'
+    return primeira_acao
+
+def main_acao():
+    escolher_easy()
+    iniciativa(atributos['destreza'])
+
 
 print('---Qual ataque você quer fazer?')
 print(f'[1] Atacar com {escolha_arma}')
