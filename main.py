@@ -122,7 +122,7 @@ def primeiro(iniciativa_player: int, iniciativa_inimigo: int) -> str:
     if iniciativa_player >= iniciativa_inimigo:
         primeira_acao = 'player'
     else:
-        primeira_acao = 'inimigo'
+        primeira_acao = 'player'
     return primeira_acao
 
 def atacar(forca: int, armadura: int, dado: int, dano: int) -> int:
@@ -141,12 +141,12 @@ def atacar(forca: int, armadura: int, dado: int, dano: int) -> int:
     
 def primeiro_acao():
     inimigo = escolher_easy()
-    print(f'Seu inimigo é {inimigo[1]}')
+    print(f'Seu inimigo é {inimigo[0]}')
     print('Vamos rolar as iniciativas')
     iniciativa_player = rolagem_iniciativa(atributos['destreza'])
     print(f'Sua iniciativa foi: {iniciativa_player}')
-    iniciativa_inimigo = rolagem_iniciativa_inimigo(inimigo[5[2]])
-    print(f'A iniciativa do {inimigo[1]} foi: {iniciativa_inimigo}')
+    iniciativa_inimigo = rolagem_iniciativa_inimigo(inimigo[4][1])
+    print(f'A iniciativa do {inimigo[0]} foi: {iniciativa_inimigo}')
     primeira_acao = primeiro(iniciativa_player, iniciativa_inimigo)
     if primeira_acao == 'player':
         escolher_acao = None
@@ -156,4 +156,6 @@ def primeiro_acao():
             print('[2] Fugir')
             escolher_acao = int(input('Escolha sua ação: '))
         if primeira_acao == 1:
-            atacar(atributos['força'], inimigo[3], )
+            atacar(atributos['força'], inimigo[2], arma[1], arma[2])
+
+primeiro_acao()
