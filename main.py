@@ -28,17 +28,19 @@ def exibir_atributos(atributos: dict, pontos_livres: int) -> str:
     print(f'[Sair] Escolha feita (Pontos não usados serão perdidos)')
 
 def escolher_atributo(atributos: dict) -> str:
-    escolha_atributos = input('Digite o nome do atributo escolhido: ').lower()
-    if escolha_atributos in atributos or escolha_atributos == 'sair':
-        return escolha_atributos
-    else:
-        print("Atributo inválido. Tente novamente.")
-        return None
+    escolha_atributos = None
+    while escolha_atributos not in atributos or escolha_atributos == 'sair':
+        escolha_atributos = input('Digite o nome do atributo escolhido: ').lower()
+        if escolha_atributos not in atributos:
+            print('Opção incorreta')
+    return escolha_atributos
 
 def escolher_acao() -> str:
     remover_adicionar = None
     while remover_adicionar not in ['remover', 'adicionar']:
         remover_adicionar = input('Você quer remover ou adicionar pontos? ').lower()
+        if remover_adicionar not in ['remover','adicionar']:
+            print('Opção incorreta')
     return remover_adicionar
 
 def adicionar_pontos(atributos, escolha_atributos, pontos_livres):
@@ -96,4 +98,13 @@ while escolha_arma not in warrior.armas:
     print(f'Espada Longa | 1d10')
     escolha_arma = input('Insira o nome da sua arma: ').title()
 
-print(escolha_arma)
+# Comece o combate
+
+print('---Que o combate comece---')
+inimigo = easy.randomizar_inimigo()
+vida_inimigo = inimigo[1]
+armadura_inimigo = inimigo[2]
+
+print('---Qual ataque você quer fazer?')
+print(f'[1] Atacar com {escolha_arma}')
+escolha_ataque = int(input(': '))
