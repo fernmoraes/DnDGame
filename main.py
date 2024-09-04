@@ -176,7 +176,7 @@ def combate_easy():
     iniciativa_inimigo = rolagem_iniciativa_inimigo(inimigo[4][1])
     print(f'A iniciativa do {inimigo[0]} foi: {iniciativa_inimigo}')
     primeira_acao = primeiro(iniciativa_player, iniciativa_inimigo)
-    while vida_inimigo > 0 or vida_player > 0:
+    while vida_inimigo > 0 and vida_player > 0:
         if primeira_acao == 'player':
             escolher_acao = None
             while escolher_acao not in opcoes_acao:
@@ -187,15 +187,19 @@ def combate_easy():
                 dano_total = player_atacar(atributos['força'], inimigo[2], arma[1], arma[2])
                 vida_inimigo -= dano_total
                 print(f'A vida do seu inimigo é {vida_inimigo}')
+            if vida_inimigo <= 0:  # Verificação após o ataque
+                break
             print(f'---Turno do {inimigo[0]}---')
             dano_total = inimigo_atacar(inimigo[3][2], armadura_classe, inimigo[3][0], inimigo[3][1])
             vida_player -= dano_total
-            print(f'A Sua vida é {vida_player}')
+            print(f'A sua vida é {vida_player}')
         else:
             print(f'---Turno do {inimigo[0]}---')
             dano_total = inimigo_atacar(inimigo[3][2], armadura_classe, inimigo[3][0], inimigo[3][1])
             vida_player -= dano_total
-            print(f'A Sua vida é {vida_player}')
+            print(f'A sua vida é {vida_player}')
+            if vida_player <= 0:  # Verificação após o ataque
+                break
             escolher_acao = None
             while escolher_acao not in opcoes_acao:
                 print('---Seu turno---')
@@ -205,11 +209,13 @@ def combate_easy():
                 dano_total = player_atacar(atributos['força'], inimigo[2], arma[1], arma[2])
                 vida_inimigo -= dano_total
             print(f'A vida do seu inimigo é {vida_inimigo}')
+
     if vida_inimigo <= 0:
         print(f'O {inimigo[0]} morreu')
         print(f'Você sobreviveu com {vida_player} de HP')
     else:
         print(f'Você morreu')
+
 
 combate_easy()
 
