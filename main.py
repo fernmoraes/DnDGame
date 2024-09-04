@@ -57,18 +57,26 @@ def escolher_add_remove() -> str:
     return remover_adicionar
 
 def adicionar_pontos(atributos, escolha_atributos, pontos_livres):
-    quantidade_atributo = int(input(f'Quantos pontos de {pontos_livres} você quer adicionar em {atributos[escolha_atributos]}? '))
-    
-    # Verifica se o valor final ultrapassaria 20
-    if atributos[escolha_atributos] + quantidade_atributo > 20:
-        print(f'Não é possível adicionar essa quantidade. {escolha_atributos.capitalize()} não pode ultrapassar 20.')
-    elif pontos_livres - quantidade_atributo >= 0:
-        atributos[escolha_atributos] += quantidade_atributo
-        pontos_livres -= quantidade_atributo
-    else:
-        print('Pontos livres insuficientes')
+    while True:
+        try:
+            # Tenta converter a entrada do usuário em um número inteiro
+            quantidade_atributo = int(input(f'Quantos pontos de {pontos_livres} você quer adicionar em {escolha_atributos.capitalize()}? '))
+
+            # Verifica se o valor final ultrapassaria 20
+            if atributos[escolha_atributos] + quantidade_atributo > 20:
+                print(f'Não é possível adicionar essa quantidade. {escolha_atributos.capitalize()} não pode ultrapassar 20.')
+            elif pontos_livres - quantidade_atributo >= 0:
+                atributos[escolha_atributos] += quantidade_atributo
+                pontos_livres -= quantidade_atributo
+                break  # Sai do loop após uma entrada válida
+            else:
+                print('Pontos livres insuficientes')
+        except ValueError:
+            # Captura erros de conversão para int e pede nova entrada
+            print('Por favor, insira um número inteiro válido.')
     
     return pontos_livres
+
 
 def remover_pontos(atributos: dict, escolha_atributos: str, pontos_livres: int) -> int:
     quantidade_atributo = int(input(f'Quantos pontos de {pontos_livres} você quer remover em {atributos[escolha_atributos]}? '))
