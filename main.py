@@ -5,20 +5,31 @@ from math import floor
 escolha_arma = None
 
 
-# Definindo sua classe
-op_classes = ['guerreiro']
-escolha_classe = None
+# Função para definir a classe
+def definir_classe():
+    op_classes = ['guerreiro']
+    escolha_classe = None
 
-while escolha_classe not in op_classes:
-    print('---Escolha sua Classe---')
-    print('Guerreiro')
-    print('Futuramente mais')
-    escolha_classe = input('Minha classe será: ')
-    escolha_classe = escolha_classe.lower()
+    while escolha_classe not in op_classes:
+        print('---Escolha sua Classe---')
+        print('Guerreiro')
+        print('Futuramente mais')
+        escolha_classe = input('Minha classe será: ').lower()
 
-print(f'Sua classe será {escolha_classe}')
-vida_classe = warrior.vida
-armadura_classe = warrior.armadura
+    print(f'Sua classe será {escolha_classe}')
+    
+    if escolha_classe == 'guerreiro':
+        vida_classe = warrior.vida
+        armadura_classe = warrior.armadura
+    else:
+        vida_classe = 0  # Defina valores padrões para evitar erros caso outras classes sejam implementadas
+        armadura_classe = 0
+    
+    return vida_classe, armadura_classe
+
+# Exemplo de uso
+vida_classe, armadura_classe = definir_classe()
+
 
 
 # Definindo seus atributos
@@ -168,7 +179,6 @@ def combate_easy():
     inimigo = escolher_easy()
     vida_inimigo = inimigo[1]
     vida_player = calcular_vida(vida_classe, atributos['constituicao'])
-    armadura_classe = warrior.armadura
     print(f'Seu inimigo é {inimigo[0]}')
     print('Vamos rolar as iniciativas')
     iniciativa_player = rolagem_iniciativa(atributos['destreza'])
