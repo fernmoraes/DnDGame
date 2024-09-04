@@ -7,28 +7,28 @@ escolha_arma = None
 
 # Função para definir a classe
 def definir_classe():
-    op_classes = ['guerreiro']
+    op_classes = ['Guerreiro']
     escolha_classe = None
 
     while escolha_classe not in op_classes:
         print('---Escolha sua Classe---')
         print('Guerreiro')
         print('Futuramente mais')
-        escolha_classe = input('Minha classe será: ').lower()
+        escolha_classe = input('Minha classe será: ').capitalize()
 
     print(f'Sua classe será {escolha_classe}')
     
-    if escolha_classe == 'guerreiro':
+    if escolha_classe == 'Guerreiro':
         vida_classe = warrior.vida
         armadura_classe = warrior.armadura
     else:
         vida_classe = 0  # Defina valores padrões para evitar erros caso outras classes sejam implementadas
         armadura_classe = 0
     
-    return vida_classe, armadura_classe
+    return vida_classe, armadura_classe, escolha_classe
 
 # Exemplo de uso
-vida_classe, armadura_classe = definir_classe()
+vida_classe, armadura_classe, escolha_classe = definir_classe()
 
 
 
@@ -81,7 +81,7 @@ def remover_pontos(atributos: dict, escolha_atributos: str, pontos_livres: int) 
 
 def main_atr() -> dict:
     pontos_livres = 27
-    atributos = {'força': 10, 'destreza': 10, 'constituicao': 10, 'inteligencia': 10, 'sabedoria': 10, 'carisma': 10}
+    atributos = {'forca': 10, 'destreza': 10, 'constituicao': 10, 'inteligencia': 10, 'sabedoria': 10, 'carisma': 10}
     escolha_atributos = None
 
     while escolha_atributos != 'sair':
@@ -101,17 +101,24 @@ def main_atr() -> dict:
     return atributos
 
 atributos = main_atr()
-# Escolhendo arma
 
-while escolha_arma not in warrior.armas:
-    print('---Escolha sua arma---')
-    print(f'Espada Curta | 1d6')
-    print(f'Espada Grande | 2d6')
-    print(f'Espada Longa | 1d10')
-    escolha_arma = input('Insira o nome da sua arma: ').title()
+# Escolhea a arma
+def escolher_arma(classe: str):
+    if classe == 'Guerreiro':
+        armas = warrior.armas
+    else:
+        armas = {}
 
-if escolha_arma in warrior.armas:
-    arma = warrior.armas[escolha_arma]
+    escolha_arma = None
+    while escolha_arma not in armas:
+        print('---Escolha sua arma---')
+        for arma, detalhes in armas.items():
+            print(f"{arma} | {detalhes[0]} {detalhes[1]}d{detalhes[2]}")
+        escolha_arma = input('Insira o nome da sua arma: ').title()
+
+    return armas[escolha_arma]
+
+arma = escolher_arma(escolha_classe)
 print(arma)
 
 # Comece o combate
@@ -192,9 +199,9 @@ def combate_easy():
             while escolher_acao not in opcoes_acao:
                 print('---Seu turno!---')
                 print('Atacar')
-                escolher_acao = input('Escolha sua ação: ').title()
+                escolher_acao = input('Escolha sua ação: ').capitalize()
             if escolher_acao == 'Atacar':
-                dano_total = player_atacar(atributos['força'], inimigo[2], arma[1], arma[2])
+                dano_total = player_atacar(atributos['forca'], inimigo[2], arma[1], arma[2])
                 vida_inimigo -= dano_total
                 print(f'A vida do seu inimigo é {vida_inimigo}')
             if vida_inimigo <= 0:  # Verificação após o ataque
@@ -214,9 +221,9 @@ def combate_easy():
             while escolher_acao not in opcoes_acao:
                 print('---Seu turno---')
                 print('Atacar')
-                escolher_acao = input('Escolha sua ação: ').title()
+                escolher_acao = input('Escolha sua ação: ').capitalize()
             if escolher_acao == 'Atacar':
-                dano_total = player_atacar(atributos['força'], inimigo[2], arma[1], arma[2])
+                dano_total = player_atacar(atributos['forca'], inimigo[2], arma[1], arma[2])
                 vida_inimigo -= dano_total
             print(f'A vida do seu inimigo é {vida_inimigo}')
 
