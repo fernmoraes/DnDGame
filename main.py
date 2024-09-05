@@ -99,7 +99,7 @@ def remover_pontos(atributos: dict, escolha_atributos: str, pontos_livres: int) 
     return pontos_livres
 
 
-def main_atr() -> dict:
+def main_atr() -> dict: # Função principal dos atributos
     pontos_livres = 27
     atributos = {'forca': 10, 'destreza': 10, 'constituicao': 10, 'inteligencia': 10, 'sabedoria': 10, 'carisma': 10}
     escolha_atributos = None
@@ -146,39 +146,40 @@ print(arma)
 opcoes_acao = ['Atacar',]
 
 print('---Que o combate comece---')
-def escolher_easy() -> list:
+
+def escolher_easy() -> list:    # Escolhe um inimigo da lista 
     inimigo = easy.randomizar_inimigo()
     return inimigo
 
-def rolagem_iniciativa(destreza: int) -> int:
+def rolagem_iniciativa(destreza: int) -> int:   # Rola a iniciativa do player
     des_calculada = floor((destreza - 10) / 2)
     rolagem = random.randint(1, 20)
     iniciativa = des_calculada + rolagem
     return iniciativa
 
-def rolagem_iniciativa_inimigo(destreza_inimigo: int) -> int:
+def rolagem_iniciativa_inimigo(destreza_inimigo: int) -> int:   # Rola a iniciativa do inimigo
     rolagem = random.randint(1, 20)
     iniciativa = rolagem + destreza_inimigo
     return iniciativa
 
-def primeiro(iniciativa_player: int, iniciativa_inimigo: int) -> str:
+def primeiro(iniciativa_player: int, iniciativa_inimigo: int) -> str:   # Define quem vai tomar a ação primeiro
     if iniciativa_player >= iniciativa_inimigo:
         primeira_acao = 'player'
     else:
         primeira_acao = 'inimigo'
     return primeira_acao
 
-def calcular_vida(vida_classe: int, constituicao_player: int) -> int:
+def calcular_vida(vida_classe: int, constituicao_player: int) -> int:   # Calcula a vida do player com base na classe dele
     cons_calculada = floor((constituicao_player - 10) / 2)
     vida_player = cons_calculada + vida_classe
     return vida_player
 
-def player_atacar(forca_player: int, armadura_inimigo: int, dado: int, dano: int) -> int:
+def player_atacar(forca_player: int, armadura_inimigo: int, dado: int, dano: int) -> int:   # Calcula a ação ataque e o dano realizado
     for_calculada = floor((forca_player - 10) / 2)
     ataque = random.randint(1, 20) + for_calculada
     print(f'A rolagem de ataque foi {ataque}')
     if ataque >= armadura_inimigo:
-        dano_total = 0  # Inicialize como zero, não como None
+        dano_total = 0
         for n in range(dado):
             dano_rolado = random.randint(1, dano) + for_calculada
             dano_total += dano_rolado
@@ -188,11 +189,11 @@ def player_atacar(forca_player: int, armadura_inimigo: int, dado: int, dano: int
         print('O ataque errou')
         return 0
 
-def inimigo_atacar(forca_inimigo: int, armadura_player: int, dado: int, dano: int) -> int:
+def inimigo_atacar(forca_inimigo: int, armadura_player: int, dado: int, dano: int) -> int: # Calcula a ação ataque do inimigo e o dano realizado
     ataque = random.randint(1, 20) + forca_inimigo
     print(f'A rolagem de ataque foi {ataque}')
     if ataque >= armadura_player:
-        dano_total = 0  # Inicialize como zero, não como None
+        dano_total = 0
         for n in range(dado):
             dano_rolado = random.randint(1, dano) + forca_inimigo
             dano_total += dano_rolado
@@ -202,7 +203,7 @@ def inimigo_atacar(forca_inimigo: int, armadura_player: int, dado: int, dano: in
         print('O ataque errou')
         return 0
     
-def combate_easy():
+def combate_easy(): # Função principal do combate no fácil
     inimigo = escolher_easy()
     vida_inimigo = inimigo[1]
     vida_player = calcular_vida(vida_classe, atributos['constituicao'])
@@ -213,10 +214,10 @@ def combate_easy():
     iniciativa_inimigo = rolagem_iniciativa_inimigo(inimigo[4][1])
     print(f'A iniciativa do {inimigo[0]} foi: {iniciativa_inimigo}')
     primeira_acao = primeiro(iniciativa_player, iniciativa_inimigo)
-    while vida_inimigo > 0 and vida_player > 0:
-        if primeira_acao == 'player':
-            escolher_acao = None
-            while escolher_acao not in opcoes_acao:
+    while vida_inimigo > 0 and vida_player > 0: # Verifica se alguém tem a vida menor do que 0
+        if primeira_acao == 'player':   # Player começa
+            escolher_acao = None    # Turno do player
+            while escolher_acao not in opcoes_acao: 
                 print('---Seu turno!---')
                 print('Atacar')
                 escolher_acao = input('Escolha sua ação: ').capitalize()
@@ -224,21 +225,21 @@ def combate_easy():
                 dano_total = player_atacar(atributos['forca'], inimigo[2], arma[1], arma[2])
                 vida_inimigo -= dano_total
                 print(f'A vida do seu inimigo é {vida_inimigo}')
-            if vida_inimigo <= 0:  # Verificação após o ataque
+            if vida_inimigo <= 0: # Verifica se o inimigo morreu
                 break
-            print(f'---Turno do {inimigo[0]}---')
+            print(f'---Turno do {inimigo[0]}---')   # Turno do inimigo
             dano_total = inimigo_atacar(inimigo[3][2], armadura_classe, inimigo[3][0], inimigo[3][1])
             vida_player -= dano_total
             print(f'A sua vida é {vida_player}')
         else:
-            print(f'---Turno do {inimigo[0]}---')
+            print(f'---Turno do {inimigo[0]}---')   # Turno do inimigo
             dano_total = inimigo_atacar(inimigo[3][2], armadura_classe, inimigo[3][0], inimigo[3][1])
             vida_player -= dano_total
             print(f'A sua vida é {vida_player}')
-            if vida_player <= 0:  # Verificação após o ataque
+            if vida_player <= 0:    # Verifica a vida do player
                 break
-            escolher_acao = None
-            while escolher_acao not in opcoes_acao:
+            escolher_acao = None    # Turno do player
+            while escolher_acao not in opcoes_acao: 
                 print('---Seu turno---')
                 print('Atacar')
                 escolher_acao = input('Escolha sua ação: ').capitalize()
