@@ -145,8 +145,6 @@ print(arma)
 
 opcoes_acao = ['Atacar',]
 
-print('---Que o combate comece---')
-
 def escolher_easy() -> list:    # Escolhe um inimigo da lista 
     inimigo = easy.randomizar_inimigo()
     return inimigo
@@ -251,9 +249,23 @@ def combate_easy(): # Função principal do combate no fácil
     if vida_inimigo <= 0:
         print(f'O {inimigo[0]} morreu')
         print(f'Você sobreviveu com {vida_player} de HP')
+        estado = 'vivo'
+        return estado
     else:
         print(f'Você morreu')
+        estado = 'morto'
+        return estado
+    
 
+# Escolha de dificuldade
+opcoes_dificuldade = ['Easy']
 
-combate_easy()
-
+while True:
+    estado = 'Vivo'
+    escolha_dificuldade = None
+    while escolha_dificuldade not in opcoes_dificuldade:
+        print('---Escolha a dificuldade dos encontros---')
+        print('Easy')
+        escolha_dificuldade = input('Dificuldade: ').capitalize()
+    if escolha_dificuldade == 'Easy':
+        combate_easy()
