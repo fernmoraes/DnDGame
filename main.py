@@ -5,21 +5,21 @@ from math import floor
 
 # Função para definir a classe
 def definir_classe():
-    op_classes = ['Guerreiro']
+    op_classes = ['warrior']
     escolha_classe = None
 
     while escolha_classe not in op_classes: #Verifica se a classe existe
         print('---Escolha sua Classe---')
-        print('Guerreiro')
+        print('Warrior')
         print('Futuramente mais')
-        escolha_classe = input('Minha classe será: ').capitalize()
+        escolha_classe = input('Minha classe será: ').lower()
 
     print(f'Sua classe será {escolha_classe}')
     
     # Pega os atributos básicos da classe
-    if escolha_classe == 'Guerreiro':
-        vida_classe = warrior.vida
-        armadura_classe = warrior.armadura
+    if escolha_classe == 'warrior':
+        vida_classe = warrior.hp
+        armadura_classe = warrior.ac
     else:
         vida_classe = 0  # Defina valores padrões para evitar erros caso outras classes sejam implementadas
         armadura_classe = 0
@@ -34,21 +34,21 @@ def exibir_atributos(atributos: dict, pontos_livres: int) -> str:   # Mostra os 
     print(f'Você possui {pontos_livres} para distribuir nesses atributos')
     for atributo, valor in atributos.items():
         print(f'{atributo.capitalize()}: {valor}')
-    print(f'[Sair] Escolha feita (Pontos não usados serão perdidos)')
+    print(f'[Quit] Escolha feita (Pontos não usados serão perdidos)')
 
 def escolher_atributo(atributos: dict) -> str:  # Pede a escolha de um atributo
     escolha_atributos = None
-    while escolha_atributos not in atributos and escolha_atributos != 'sair':
+    while escolha_atributos not in atributos and escolha_atributos != 'quit':
         escolha_atributos = input('Digite o nome do atributo escolhido: ').lower()
-        if escolha_atributos not in atributos and escolha_atributos != 'sair':
+        if escolha_atributos not in atributos and escolha_atributos != 'quit':
             print('Opção incorreta')
     return escolha_atributos
 
 def escolher_add_remove() -> str:   # Pede a escolha da adição ou remoção de pontos em um atributo 
     remover_adicionar = None
-    while remover_adicionar not in ['remover', 'adicionar']:
-        remover_adicionar = input('Você quer remover ou adicionar pontos? ').lower()
-        if remover_adicionar not in ['remover','adicionar']:
+    while remover_adicionar not in ['remove', 'add']:
+        remover_adicionar = input('Você quer remove ou add pontos? ').lower()
+        if remover_adicionar not in ['remove','add']:
             print('Opção incorreta')
     return remover_adicionar
 
@@ -100,20 +100,20 @@ def remover_pontos(atributos: dict, escolha_atributos: str, pontos_livres: int) 
 
 
 def main_atr() -> dict: # Função principal dos atributos
-    pontos_livres = 27
-    atributos = {'forca': 10, 'destreza': 10, 'constituicao': 10, 'inteligencia': 10, 'sabedoria': 10, 'carisma': 10}
+    pontos_livres = 14
+    atributos = {'strength': 10, 'speed': 10, 'body': 10, 'magic': 10,}
     escolha_atributos = None
 
-    while escolha_atributos != 'sair':
+    while escolha_atributos != 'quit':
         exibir_atributos(atributos, pontos_livres)
         escolha_atributos = escolher_atributo(atributos)
         
-        if escolha_atributos != 'sair':
+        if escolha_atributos != 'quit':
             acao = escolher_add_remove()
             
-            if acao == 'adicionar':
+            if acao == 'add':
                 pontos_livres = adicionar_pontos(atributos, escolha_atributos, pontos_livres)
-            elif acao == 'remover':
+            elif acao == 'remove':
                 pontos_livres = remover_pontos(atributos, escolha_atributos, pontos_livres)
     
     print("Distribuição de pontos finalizada!")
@@ -124,8 +124,8 @@ atributos = main_atr()
 
 # Escolhea a arma
 def escolher_arma(classe: str):
-    if classe == 'Guerreiro':
-        armas = warrior.armas
+    if classe == 'warrior':
+        armas = warrior.weapons
     else:
         armas = {}
 
@@ -134,7 +134,7 @@ def escolher_arma(classe: str):
         print('---Escolha sua arma---')
         for arma, detalhes in armas.items():
             print(f"{arma} | {detalhes[0]} {detalhes[1]}d{detalhes[2]}")
-        escolha_arma = input('Insira o nome da sua arma: ').title()
+        escolha_arma = input('Insira o nome da sua arma: ').lower()
 
     return armas[escolha_arma]
 
@@ -143,43 +143,43 @@ print(arma)
 
 # Comece o combate
 
-opcoes_acao = ['Atacar',]
+opcoes_acao = ['attack',]
 
 def escolher_easy() -> list:    # Escolhe um inimigo da lista 
     inimigo = easy.randomizar_inimigo()
     return inimigo
 
-def rolagem_iniciativa(destreza: int) -> int:   # Rola a iniciativa do player
-    des_calculada = floor((destreza - 10) / 2)
+def rolagem_iniciativa(speed: int) -> int:   # Rola a iniciativa do player
+    speed_calculada = floor((speed - 10) / 2)
     rolagem = random.randint(1, 20)
-    iniciativa = des_calculada + rolagem
+    iniciativa = speed_calculada + rolagem
     return iniciativa
 
-def rolagem_iniciativa_inimigo(destreza_inimigo: int) -> int:   # Rola a iniciativa do inimigo
+def rolagem_iniciativa_inimigo(speed_enemy: int) -> int:   # Rola a iniciativa do inimigo
     rolagem = random.randint(1, 20)
-    iniciativa = rolagem + destreza_inimigo
+    iniciativa = rolagem + speed_enemy
     return iniciativa
 
 def primeiro(iniciativa_player: int, iniciativa_inimigo: int) -> str:   # Define quem vai tomar a ação primeiro
     if iniciativa_player >= iniciativa_inimigo:
         primeira_acao = 'player'
     else:
-        primeira_acao = 'inimigo'
+        primeira_acao = 'enemy'
     return primeira_acao
 
-def calcular_vida(vida_classe: int, constituicao_player: int) -> int:   # Calcula a vida do player com base na classe dele
-    cons_calculada = floor((constituicao_player - 10) / 2)
-    vida_player = cons_calculada + vida_classe
-    return vida_player
+def calcular_vida(vida_classe: int, body_player: int) -> int:   # Calcula a vida do player com base na classe dele
+    body_calculada = floor((body_player - 10) / 2)
+    hp_player = body_calculada + vida_classe
+    return hp_player
 
-def player_atacar(forca_player: int, armadura_inimigo: int, dado: int, dano: int) -> int:   # Calcula a ação ataque e o dano realizado
-    for_calculada = floor((forca_player - 10) / 2)
-    ataque = random.randint(1, 20) + for_calculada
+def player_atacar(strength_player: int, ac_inimigo: int, dado: int, dano: int) -> int:   # Calcula a ação ataque e o dano realizado
+    strength_calculada = floor((strength_player - 10) / 2)
+    ataque = random.randint(1, 20) + strength_calculada
     print(f'A rolagem de ataque foi {ataque}')
-    if ataque >= armadura_inimigo:
+    if ataque >= ac_inimigo:
         dano_total = 0
         for n in range(dado):
-            dano_rolado = random.randint(1, dano) + for_calculada
+            dano_rolado = random.randint(1, dano) + strength_calculada
             dano_total += dano_rolado
         print(f'O dano total foi: {dano_total}')    
         return dano_total
@@ -187,13 +187,13 @@ def player_atacar(forca_player: int, armadura_inimigo: int, dado: int, dano: int
         print('O ataque errou')
         return 0
 
-def inimigo_atacar(forca_inimigo: int, armadura_player: int, dado: int, dano: int) -> int: # Calcula a ação ataque do inimigo e o dano realizado
-    ataque = random.randint(1, 20) + forca_inimigo
+def inimigo_atacar(strength_enemy: int, ac_player: int, dado: int, dano: int) -> int: # Calcula a ação ataque do inimigo e o dano realizado
+    ataque = random.randint(1, 20) + strength_enemy
     print(f'A rolagem de ataque foi {ataque}')
-    if ataque >= armadura_player:
+    if ataque >= ac_player:
         dano_total = 0
         for n in range(dado):
-            dano_rolado = random.randint(1, dano) + forca_inimigo
+            dano_rolado = random.randint(1, dano) + strength_enemy
             dano_total += dano_rolado
         print(f'O dano total foi: {dano_total}')    
         return dano_total
@@ -202,53 +202,53 @@ def inimigo_atacar(forca_inimigo: int, armadura_player: int, dado: int, dano: in
         return 0
     
 def combate_easy(): # Função principal do combate no fácil
-    inimigo = escolher_easy()
-    vida_inimigo = inimigo[1]
-    vida_player = calcular_vida(vida_classe, atributos['constituicao'])
-    print(f'Seu inimigo é {inimigo[0]}')
+    enemy = escolher_easy()
+    hp_enemy = enemy[1]
+    hp_player = calcular_vida(vida_classe, atributos['body'])
+    print(f'Seu inimigo é {enemy[0]}')
     print('Vamos rolar as iniciativas')
-    iniciativa_player = rolagem_iniciativa(atributos['destreza'])
+    iniciativa_player = rolagem_iniciativa(atributos['speed'])
     print(f'Sua iniciativa foi: {iniciativa_player}')
-    iniciativa_inimigo = rolagem_iniciativa_inimigo(inimigo[4][1])
-    print(f'A iniciativa do {inimigo[0]} foi: {iniciativa_inimigo}')
+    iniciativa_inimigo = rolagem_iniciativa_inimigo(enemy[4][1])
+    print(f'A iniciativa do {enemy[0]} foi: {iniciativa_inimigo}')
     primeira_acao = primeiro(iniciativa_player, iniciativa_inimigo)
-    while vida_inimigo > 0 and vida_player > 0: # Verifica se alguém tem a vida menor do que 0
+    while hp_enemy > 0 and hp_player > 0: # Verifica se alguém tem a vida menor do que 0
         if primeira_acao == 'player':   # Player começa
             escolher_acao = None    # Turno do player
             while escolher_acao not in opcoes_acao: 
                 print('---Seu turno!---')
-                print('Atacar')
-                escolher_acao = input('Escolha sua ação: ').capitalize()
-            if escolher_acao == 'Atacar':
-                dano_total = player_atacar(atributos['forca'], inimigo[2], arma[1], arma[2])
-                vida_inimigo -= dano_total
-                print(f'A vida do seu inimigo é {vida_inimigo}')
-            if vida_inimigo <= 0: # Verifica se o inimigo morreu
+                print('Attack')
+                escolher_acao = input('Escolha sua ação: ').lower()
+            if escolher_acao == 'attack':
+                dano_total = player_atacar(atributos['strength'], enemy[2], arma[1], arma[2])
+                hp_enemy -= dano_total
+                print(f'A vida do seu inimigo é {hp_enemy}')
+            if hp_enemy <= 0: # Verifica se o inimigo morreu
                 break
-            print(f'---Turno do {inimigo[0]}---')   # Turno do inimigo
-            dano_total = inimigo_atacar(inimigo[3][2], armadura_classe, inimigo[3][0], inimigo[3][1])
-            vida_player -= dano_total
-            print(f'A sua vida é {vida_player}')
+            print(f'---Turno do {enemy[0]}---')   # Turno do inimigo
+            dano_total = inimigo_atacar(enemy[3][2], armadura_classe, enemy[3][0], enemy[3][1])
+            hp_player -= dano_total
+            print(f'A sua vida é {hp_player}')
         else:
-            print(f'---Turno do {inimigo[0]}---')   # Turno do inimigo
-            dano_total = inimigo_atacar(inimigo[3][2], armadura_classe, inimigo[3][0], inimigo[3][1])
-            vida_player -= dano_total
-            print(f'A sua vida é {vida_player}')
-            if vida_player <= 0:    # Verifica a vida do player
+            print(f'---Turno do {enemy[0]}---')   # Turno do inimigo
+            dano_total = inimigo_atacar(enemy[3][2], armadura_classe, enemy[3][0], enemy[3][1])
+            hp_player -= dano_total
+            print(f'A sua vida é {hp_player}')
+            if hp_player <= 0:    # Verifica a vida do player
                 break
             escolher_acao = None    # Turno do player
             while escolher_acao not in opcoes_acao: 
                 print('---Seu turno---')
-                print('Atacar')
-                escolher_acao = input('Escolha sua ação: ').capitalize()
-            if escolher_acao == 'Atacar':
-                dano_total = player_atacar(atributos['forca'], inimigo[2], arma[1], arma[2])
-                vida_inimigo -= dano_total
-            print(f'A vida do seu inimigo é {vida_inimigo}')
+                print('Attack')
+                escolher_acao = input('3112Escolha sua ação: ').lower()
+            if escolher_acao == 'attack':
+                dano_total = player_atacar(atributos['strength'], enemy[2], arma[1], arma[2])
+                hp_enemy -= dano_total
+            print(f'A vida do seu inimigo é {hp_enemy}')
 
-    if vida_inimigo <= 0:
-        print(f'O {inimigo[0]} morreu')
-        print(f'Você sobreviveu com {vida_player} de HP')
+    if hp_enemy <= 0:
+        print(f'O {enemy[0]} morreu')
+        print(f'Você sobreviveu com {hp_player} de HP')
         estado = 'vivo'
         return estado
     else:
@@ -258,7 +258,7 @@ def combate_easy(): # Função principal do combate no fácil
     
 
 # Escolha de dificuldade
-opcoes_dificuldade = ['Easy']
+opcoes_dificuldade = ['easy']
 
 while True:
     estado = 'Vivo'
@@ -266,6 +266,6 @@ while True:
     while escolha_dificuldade not in opcoes_dificuldade:
         print('---Escolha a dificuldade dos encontros---')
         print('Easy')
-        escolha_dificuldade = input('Dificuldade: ').capitalize()
+        escolha_dificuldade = input('Dificuldade: ').lower()
     if escolha_dificuldade == 'Easy':
         combate_easy()
