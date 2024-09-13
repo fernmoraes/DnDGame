@@ -18,8 +18,8 @@ def define_Profession():
 
     # Pega os atributos básicos da classe
     if my_Profession == 'warrior':
-        hp_Profession = warrior.hp
-        armor_Profession = warrior.ac
+        hp_Profession = warrior.hp_Profession
+        armor_Profession = warrior.armor_Profession
     else:
         hp_Profession = 0  # Defina valores padrões para evitar erros caso outras classes sejam implementadas
         armor_Profession = 0
@@ -250,22 +250,45 @@ def easy_Fight(): # Função principal do combate no fácil
         print(f'O {enemy[0]} morreu')
         print(f'Você sobreviveu com {hp_Player} de HP')
         live_Death = 'vivo'
-        return live_Death
+        loot_Challenge = 'easy'
+        return live_Death, loot_Challenge
     else:
         print(f'Você morreu')
         live_Death = 'morto'
-        return live_Death
+        loot_Challenge = None
+        return live_Death, loot_Challenge
     
+# Sistema de Loot
+def loot_Chance()->str:
+    if random.randint(1,10) >= 3:
+        loot = 'yes'
+    else:
+        loot = 'no'
+    return loot
+
+def which_Loot(loot_Challenge: str) -> str:
+    if loot_Challenge == 'easy':
+        loot_Selected = random.randrange(len(easy.easy_Loot_List))  # randrange gera um índice de 0 até len-1
+        loot = easy.easy_Loot_List[loot_Selected]
+        return loot
+
 
 # Escolha de dificuldade
 difficulty_List = ['easy']
+live_Death = 'vivo'
 
-while True:
-    live_Death = 'Vivo'
+while live_Death != 'morto':
     difficulty_Select = None
     while difficulty_Select not in difficulty_List:
         print('---Escolha a dificuldade dos encontros---')
         print('Easy')
         difficulty_Select = input('Dificuldade: ').lower()
     if difficulty_Select == 'easy':
-        easy_Fight()
+        live_Death, loot_Challenge = easy_Fight()
+    if loot_Challenge != None:
+        have_Loot = loot_Chance()
+        if have_Loot == 'yes':
+            loot = which_Loot(loot_Challenge)
+            print(f'Você encontrou {loot[0]}')
+        if have_Loot == 'no':
+            print(f'O inimigo não tinha loot :(')
