@@ -52,21 +52,21 @@ def add_or_Remove() -> str:   # Pede a escolha da adição ou remoção de ponto
             print('Opção incorreta')
     return remove_Add
 
-def add_Points(perks, perk_Select, free_Points):
+def add_Points(perks, perk_Selected, free_Points):
     while True:
         try:
             # Tenta converter a entrada do usuário em um número inteiro
-            points_Quantity = int(input(f'Quantos pontos de {free_Points} você quer adicionar em {perk_Select.capitalize()}? '))
+            points_Quantity = int(input(f'Quantos pontos de {free_Points} você quer adicionar em {perk_Selected.capitalize()}? '))
 
             # Verifica se a quantidade é positiva
             if points_Quantity < 0:
                 print('Por favor, insira um número positivo.')
             # Verifica se o valor final ultrapassaria 20
-            elif perks[perk_Select] + points_Quantity > 20:
-                print(f'Não é possível adicionar essa quantidade. {perk_Select.capitalize()} não pode ultrapassar 20.')
+            elif perks[perk_Selected] + points_Quantity > 20:
+                print(f'Não é possível adicionar essa quantidade. {perk_Selected.capitalize()} não pode ultrapassar 20.')
             # Verifica se há pontos livres suficientes
             elif free_Points - points_Quantity >= 0:
-                perks[perk_Select] += points_Quantity
+                perks[perk_Selected] += points_Quantity
                 free_Points -= points_Quantity
                 break  # Sai do loop após uma entrada válida
             else:
@@ -102,19 +102,19 @@ def remove_Points(perks: dict, perk_Select: str, free_Points: int) -> int:
 def main_atr() -> dict: # Função principal dos atributos
     free_Points = 14
     perks = {'strength': 10, 'speed': 10, 'body': 10, 'magic': 10,}
-    perk_Select = None
+    perk_Selected = None
 
-    while perk_Select != 'quit':
+    while perk_Selected != 'quit':
         show_Perks(perks, free_Points)
-        perk_Select = perk_Select(perks)
+        perk_Selected = perk_Select(perks)
         
-        if perk_Select != 'quit':
+        if perk_Selected != 'quit':
             action_Add_Remove = add_or_Remove()
             
             if action_Add_Remove == 'add':
-                free_Points = add_Points(perks, perk_Select, free_Points)
+                free_Points = add_Points(perks, perk_Selected, free_Points)
             elif action_Add_Remove == 'remove':
-                free_Points = remove_Points(perks, perk_Select, free_Points)
+                free_Points = remove_Points(perks, perk_Selected, free_Points)
     
     print("Distribuição de pontos finalizada!")
     print(f"Atributos finais: {perks}")
@@ -240,7 +240,7 @@ def easy_Fight(): # Função principal do combate no fácil
             while action_Select not in action_List: 
                 print('---Seu turno---')
                 print('Attack')
-                action_Select = input('3112Escolha sua ação: ').lower()
+                action_Select = input('Escolha sua ação: ').lower()
             if action_Select == 'attack':
                 total_Damage = player_Attack(perks['strength'], enemy[2], weapon[1], weapon[2])
                 hp_Enemy -= total_Damage
@@ -267,5 +267,5 @@ while True:
         print('---Escolha a dificuldade dos encontros---')
         print('Easy')
         difficulty_Select = input('Dificuldade: ').lower()
-    if difficulty_Select == 'Easy':
+    if difficulty_Select == 'easy':
         easy_Fight()
