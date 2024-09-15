@@ -271,9 +271,6 @@ def which_Loot(loot_Challenge: str) -> str:
         loot = easy.easy_Loot_List[loot_Selected]
         return loot
 
-
-
-
 # Escolha de dificuldade
 difficulty_List = ['easy']
 live_Death = 'vivo'

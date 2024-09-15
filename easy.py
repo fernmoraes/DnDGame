@@ -7,7 +7,7 @@ enemy_Easy_List = [['Goblin', 7, 15, [1, 6, 2], [-1, 2, 0, 0, -1, -1]],
               ['Orcs', 15, 13, [1, 12, 3], [3, 1, 3, -2, 0, 0]], 
               ['Lobos', 11, 13, [2, 4, 2], [1, 2, 1, -4, 1, -2]], 
               ['Zumbis', 22, 8, [1, 6, 1], [1, -2, 3, -4, -2, -3]], 
-              ['Aranha Gigantes', 26, 14, [3, 8, 3], [2, 3, 1, -4, 0, -3]]]
+              ['Aranha Gigantes', 26, 14, [2, 8, 3], [2, 3, 1, -4, 0, -3]]]
 
 # [Nome, tipo, quantidade, [dado, quantidade de cura]]
 easy_Loot_List = [['Cura Pequena', 'cura', 1, [1, 8]],
