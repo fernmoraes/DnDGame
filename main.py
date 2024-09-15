@@ -1,6 +1,7 @@
 import random
 import warrior
 import easy
+import character
 from math import floor
 
 # Função para definir a classe
@@ -99,9 +100,7 @@ def remove_Points(perks: dict, perk_Select: str, free_Points: int) -> int:
     return free_Points
 
 
-def main_atr() -> dict: # Função principal dos atributos
-    free_Points = 14
-    perks = {'strength': 10, 'speed': 10, 'body': 10, 'magic': 10,}
+def main_atr(perks: dict, free_Points: int) -> dict: # Função principal dos atributos
     perk_Selected = None
 
     while perk_Selected != 'quit':
@@ -118,9 +117,9 @@ def main_atr() -> dict: # Função principal dos atributos
     
     print("Distribuição de pontos finalizada!")
     print(f"Atributos finais: {perks}")
-    return perks
+    return perks, character.free_Points
 
-perks = main_atr()
+character.stats, character.free_Points = main_atr(character.stats, character.free_Points)
 
 # Escolhea a arma
 def weapon_Select(profession: str):
@@ -204,10 +203,10 @@ def enemy_Attack(strength_Enemy: int, armor_Enemy: int, attack_Quantity: int, da
 def easy_Fight(): # Função principal do combate no fácil
     enemy = select_Easy()
     hp_Enemy = enemy[1]
-    hp_Player = hp_Ready(hp_Profession, perks['body'])
+    hp_Player = hp_Ready(hp_Profession, character.stats['body'])
     print(f'Seu inimigo é {enemy[0]}')
     print('Vamos rolar as iniciativas')
-    initiative_Player = initiative_Roll(perks['speed'])
+    initiative_Player = initiative_Roll(character.stats['speed'])
     print(f'Sua iniciativa foi: {initiative_Player}')
     initiative_Enemy = enemy_Initiative_Roll(enemy[4][1])
     print(f'A iniciativa do {enemy[0]} foi: {initiative_Enemy}')
@@ -220,7 +219,7 @@ def easy_Fight(): # Função principal do combate no fácil
                 print('Attack')
                 action_Select = input('Escolha sua ação: ').lower()
             if action_Select == 'attack':
-                total_Damage = player_Attack(perks['strength'], enemy[2], weapon[1], weapon[2])
+                total_Damage = player_Attack(character.stats['strength'], enemy[2], weapon[1], weapon[2])
                 hp_Enemy -= total_Damage
                 print(f'A vida do seu inimigo é {hp_Enemy}')
             if hp_Enemy <= 0: # Verifica se o inimigo morreu
@@ -242,7 +241,7 @@ def easy_Fight(): # Função principal do combate no fácil
                 print('Attack')
                 action_Select = input('Escolha sua ação: ').lower()
             if action_Select == 'attack':
-                total_Damage = player_Attack(perks['strength'], enemy[2], weapon[1], weapon[2])
+                total_Damage = player_Attack(character.stats['strength'], enemy[2], weapon[1], weapon[2])
                 hp_Enemy -= total_Damage
             print(f'A vida do seu inimigo é {hp_Enemy}')
 
@@ -273,6 +272,8 @@ def which_Loot(loot_Challenge: str) -> str:
         return loot
 
 
+
+
 # Escolha de dificuldade
 difficulty_List = ['easy']
 live_Death = 'vivo'
@@ -289,6 +290,7 @@ while live_Death != 'morto':
         have_Loot = loot_Chance()
         if have_Loot == 'yes':
             loot = which_Loot(loot_Challenge)
+            character.inventory.append[loot]
             print(f'Você encontrou {loot[0]}')
         if have_Loot == 'no':
             print(f'O inimigo não tinha loot :(')
