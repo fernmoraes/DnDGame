@@ -323,7 +323,7 @@ while live_Death != 'morto':
         have_Loot = loot_Chance()
         if have_Loot == 'yes':
             loot = which_Loot(loot_Challenge)
-            character.inventory.append[loot]
+            character.inventory.append(loot)
             print(f'Você encontrou {loot[0]}')
         if have_Loot == 'no':
             print(f'O inimigo não tinha loot :(')
