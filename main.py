@@ -142,7 +142,7 @@ print(weapon)
 
 # Comece o combate
 
-action_List = ['attack',]
+action_List = ['attack', 'inventory', 'run']
 
 def select_Easy() -> list:    # Escolhe um inimigo da lista 
     enemy = easy.random_Enemy()
@@ -170,6 +170,16 @@ def hp_Ready(hp_Profession: int, body_Player: int) -> int:   # Calcula a vida do
     body_Ready = floor((body_Player - 10) / 2)
     hp_Player = body_Ready + hp_Profession
     return hp_Player
+
+def run_Player(speed_Player: int, speed_Enemy: int) -> str:
+    speed_Player_Ready = floor((speed_Player - 10) / 2)
+    speed_Enemy_Ready = floor((speed_Enemy - 10) / 2)
+    roll_Player = random.randint(1, 20) + speed_Player_Ready
+    roll_Enemy = random.randint(1, 20) + speed_Enemy_Ready
+    if roll_Player > roll_Enemy:
+        return 'success'
+    else:
+        return 'fail'
 
 def player_Attack(strength_Player: int, armor_Enemy: int, attack_Quantity: int, damage_Weapon: int) -> int:   # Calcula a ação ataque e o dano realizado
     strength_Ready = floor((strength_Player - 10) / 2)
@@ -217,7 +227,18 @@ def easy_Fight(): # Função principal do combate no fácil
             while action_Select not in action_List: 
                 print('---Seu turno!---')
                 print('Attack')
+                print('Inventory')
+                print('Run')
                 action_Select = input('Escolha sua ação: ').lower()
+            if action_Select == 'run':
+                run = run_Player(character.stats['speed'], enemy[4][1])
+                if run == 'success':
+                    print('Você conseguiu escapar')
+                    live_Death = 'vivo'
+                    loot_Challenge = None
+                    return live_Death, loot_Challenge
+                else:
+                    print('Você não conseguiu escapar')
             if action_Select == 'attack':
                 total_Damage = player_Attack(character.stats['strength'], enemy[2], weapon[1], weapon[2])
                 hp_Enemy -= total_Damage
@@ -239,7 +260,18 @@ def easy_Fight(): # Função principal do combate no fácil
             while action_Select not in action_List: 
                 print('---Seu turno---')
                 print('Attack')
+                print('Inventory')
+                print('Run')
                 action_Select = input('Escolha sua ação: ').lower()
+                if action_Select == 'run':
+                    run = run_Player(character.stats['speed'], enemy[4][1])
+                    if run == 'success':
+                        print('Você conseguiu escapar')
+                        live_Death = 'vivo'
+                        loot_Challenge = None
+                        return live_Death, loot_Challenge
+                    else:
+                        print('Você não conseguiu escapar')
             if action_Select == 'attack':
                 total_Damage = player_Attack(character.stats['strength'], enemy[2], weapon[1], weapon[2])
                 hp_Enemy -= total_Damage
@@ -251,9 +283,13 @@ def easy_Fight(): # Função principal do combate no fácil
         live_Death = 'vivo'
         loot_Challenge = 'easy'
         return live_Death, loot_Challenge
-    else:
+    elif hp_Enemy > 0:
         print(f'Você morreu')
         live_Death = 'morto'
+        loot_Challenge = None
+        return live_Death, loot_Challenge
+    else:
+        live_Death = 'vivo'
         loot_Challenge = None
         return live_Death, loot_Challenge
     
