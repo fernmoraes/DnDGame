@@ -1,19 +1,18 @@
 import random
+import copy  # Para copiar profundamente o dicionário
 
-# [Nome, vida, armadura,[dado, dano, bonus], [strength, speed, body, magic]] 
-enemy_Easy_List = [['Goblin', 7, 15, [1, 6, 2], [-1, 2, 0, 0,]], 
-              ['Kobold', 5, 12, [1, 4, 2], [-2, 2, -1, -1,]], 
-              ['Esqueleto', 13, 13, [1, 6, 2], [0, 2, 2, -2,]],
-              ['Orcs', 15, 13, [1, 12, 3], [3, 1, 3, -2,]], 
-              ['Lobos', 11, 13, [2, 4, 2], [1, 2, 1, -4,]], 
-              ['Zumbis', 22, 8, [1, 6, 1], [1, -2, 3, -4,]], 
-              ['Aranha Gigantes', 26, 14, [2, 8, 3], [2, 3, 1, -4,]]]
+# Definição dos inimigos
+enemies_Easy = {'Goblin': {'name': 'Goblin', 'hp': 7, 'armor': 15, 'weapon': [1, 6], 'stats': [8, 14, 10, 10]},
+                'Kobold': {'name': 'Kobold', 'hp': 5, 'armor': 12, 'weapon': [1, 4], 'stats': [6, 14, 8, 8]},
+                'Esqueleto': {'name': 'Esqueleto', 'hp': 13, 'armor': 13, 'weapon': [1, 6], 'stats': [10, 14, 14, 6]},
+                'Zumbi': {'name': 'Zumbi', 'hp': 22, 'armor': 8, 'weapon': [1, 6], 'stats': [12, 6, 16, 2]}}
 
-# [Nome, tipo, quantidade, [dado, quantidade de cura]]
-easy_Loot_List = [['Cura Pequena', 'cura', 1, [1, 8]],
-                  ['Cura Media', 'cura', 2, [1, 8]]]
+# Definição dos loots
+easy_Loots = [['Cura Pequena', 'cura', [1, 8]],
+              ['Cura Media', 'cura', [1, 8]]]
 
-def random_Enemy() -> list:
-    enemy_Selected = random.randint(0, 6)
-    enemy = enemy_Easy_List[enemy_Selected]
-    return enemy
+# Função para escolher inimigo aleatório com cópia profunda
+def random_Enemy() -> dict:
+    enemy_name = random.choice(list(enemies_Easy.keys()))
+    chosen_enemy = copy.deepcopy(enemies_Easy[enemy_name])  # Copiar profundamente o inimigo
+    return chosen_enemy

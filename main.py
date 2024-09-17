@@ -27,7 +27,7 @@ def define_Profession():
     
     return hp_Profession, armor_Profession, my_Profession
 
-hp_Profession, armor_Profession, my_Profession = define_Profession()
+character.hp, character.armor, character.profession = define_Profession()
 
 # Definindo seus atributos
 def show_Perks(perks: dict, free_Points: int) -> str:   # Mostra os atributos
@@ -117,7 +117,7 @@ def main_atr(perks: dict, free_Points: int) -> dict: # Função principal dos at
     
     print("Distribuição de pontos finalizada!")
     print(f"Atributos finais: {perks}")
-    return perks, character.free_Points
+    return perks, free_Points
 
 character.stats, character.free_Points = main_atr(character.stats, character.free_Points)
 
@@ -137,52 +137,28 @@ def weapon_Select(profession: str):
 
     return weapons[weapon_Select]
 
-weapon = weapon_Select(my_Profession)
-print(weapon)
+character.player_Weapon = weapon_Select(character.profession)
+print(character.player_Weapon)
 
 # Comece o combate
-
-action_List = ['attack', 'inventory', 'run']
-
-def select_Easy() -> list:    # Escolhe um inimigo da lista 
-    enemy = easy.random_Enemy()
-    return enemy
-
-def initiative_Roll(speed: int) -> int:   # Rola a iniciativa do player
-    speed_Ready = floor((speed - 10) / 2)
-    roll = random.randint(1, 20)
-    initiative = speed_Ready + roll
-    return initiative
-
-def enemy_Initiative_Roll(speed_enemy: int) -> int:   # Rola a iniciativa do inimigo
-    roll = random.randint(1, 20)
-    initiative = roll + speed_enemy
-    return initiative
-
-def who_First_Action(player_Initiative: int, enemy_Initiative: int) -> str:   # Define quem vai tomar a ação primeiro
-    if player_Initiative >= enemy_Initiative:
-        who_First_Action = 'player'
-    else:
-        who_First_Action = 'enemy'
-    return who_First_Action
 
 def hp_Ready(hp_Profession: int, body_Player: int) -> int:   # Calcula a vida do player com base na classe dele
     body_Ready = floor((body_Player - 10) / 2)
     hp_Player = body_Ready + hp_Profession
     return hp_Player
 
-def run_Player(speed_Player: int, speed_Enemy: int) -> str:
-    speed_Player_Ready = floor((speed_Player - 10) / 2)
+def running(speed_Runner: int, speed_Enemy: int) -> str:
+    speed_Runner_Ready = floor((speed_Runner - 10) / 2)
     speed_Enemy_Ready = floor((speed_Enemy - 10) / 2)
-    roll_Player = random.randint(1, 20) + speed_Player_Ready
+    roll_Runner = random.randint(1, 20) + speed_Runner_Ready
     roll_Enemy = random.randint(1, 20) + speed_Enemy_Ready
-    if roll_Player > roll_Enemy:
+    if roll_Runner > roll_Enemy:
         return 'success'
     else:
         return 'fail'
 
-def player_Attack(strength_Player: int, armor_Enemy: int, attack_Quantity: int, damage_Weapon: int) -> int:   # Calcula a ação ataque e o dano realizado
-    strength_Ready = floor((strength_Player - 10) / 2)
+def Attack(strength_Attacker: int, armor_Enemy: int, attack_Quantity: int, damage_Weapon: int) -> int:   # Calcula a ação ataque e o dano realizado
+    strength_Ready = floor((strength_Attacker - 10) / 2)
     attack = random.randint(1, 20) + strength_Ready
     print(f'A rolagem de ataque foi {attack}')
     if attack >= armor_Enemy:
@@ -196,101 +172,66 @@ def player_Attack(strength_Player: int, armor_Enemy: int, attack_Quantity: int, 
         print('O ataque errou')
         return 0
 
-def enemy_Attack(strength_Enemy: int, armor_Enemy: int, attack_Quantity: int, damage_Weapon: int) -> int: # Calcula a ação ataque do inimigo e o dano realizado
-    attack = random.randint(1, 20) + strength_Enemy
-    print(f'A rolagem de ataque foi {attack}')
-    if attack >= armor_Enemy:
-        total_Damage = 0
-        for n in range(attack_Quantity):
-            damage_Roll = random.randint(1, damage_Weapon) + strength_Enemy
-            total_Damage += damage_Roll
-        print(f'O dano total foi: {total_Damage}')    
-        return total_Damage
-    else:
-        print('O ataque errou')
-        return 0
-    
-def easy_Fight(): # Função principal do combate no fácil
-    enemy = select_Easy()
-    hp_Enemy = enemy[1]
-    hp_Player = hp_Ready(hp_Profession, character.stats['body'])
-    print(f'Seu inimigo é {enemy[0]}')
-    print('Vamos rolar as iniciativas')
-    initiative_Player = initiative_Roll(character.stats['speed'])
-    print(f'Sua iniciativa foi: {initiative_Player}')
-    initiative_Enemy = enemy_Initiative_Roll(enemy[4][1])
-    print(f'A iniciativa do {enemy[0]} foi: {initiative_Enemy}')
-    first_Action = who_First_Action(initiative_Player, initiative_Enemy)
-    while hp_Enemy > 0 and hp_Player > 0: # Verifica se alguém tem a vida menor do que 0
-        if first_Action == 'player':   # Player começa
-            action_Select = None    # Turno do player
-            while action_Select not in action_List: 
-                print('---Seu turno!---')
-                print('Attack')
-                print('Inventory')
-                print('Run')
-                action_Select = input('Escolha sua ação: ').lower()
-            if action_Select == 'run':
-                run = run_Player(character.stats['speed'], enemy[4][1])
-                if run == 'success':
-                    print('Você conseguiu escapar')
-                    live_Death = 'vivo'
-                    loot_Challenge = None
-                    return live_Death, loot_Challenge
-                else:
-                    print('Você não conseguiu escapar')
-            if action_Select == 'attack':
-                total_Damage = player_Attack(character.stats['strength'], enemy[2], weapon[1], weapon[2])
-                hp_Enemy -= total_Damage
-                print(f'A vida do seu inimigo é {hp_Enemy}')
-            if hp_Enemy <= 0: # Verifica se o inimigo morreu
-                break
-            print(f'---Turno do {enemy[0]}---')   # Turno do inimigo
-            total_Damage = enemy_Attack(enemy[3][2], armor_Profession, enemy[3][0], enemy[3][1])
-            hp_Player -= total_Damage
-            print(f'A sua vida é {hp_Player}')
-        else:
-            print(f'---Turno do {enemy[0]}---')   # Turno do inimigo
-            total_Damage = enemy_Attack(enemy[3][2], armor_Profession, enemy[3][0], enemy[3][1])
-            hp_Player -= total_Damage
-            print(f'A sua vida é {hp_Player}')
-            if hp_Player <= 0:    # Verifica a vida do player
-                break
-            action_Select = None    # Turno do player
-            while action_Select not in action_List: 
-                print('---Seu turno---')
-                print('Attack')
-                print('Inventory')
-                print('Run')
-                action_Select = input('Escolha sua ação: ').lower()
-                if action_Select == 'run':
-                    run = run_Player(character.stats['speed'], enemy[4][1])
-                    if run == 'success':
-                        print('Você conseguiu escapar')
-                        live_Death = 'vivo'
-                        loot_Challenge = None
-                        return live_Death, loot_Challenge
-                    else:
-                        print('Você não conseguiu escapar')
-            if action_Select == 'attack':
-                total_Damage = player_Attack(character.stats['strength'], enemy[2], weapon[1], weapon[2])
-                hp_Enemy -= total_Damage
-            print(f'A vida do seu inimigo é {hp_Enemy}')
+def check_inventory(inventory: list):
+    print('---INVENTÁRIO---')
+    for n in inventory:
+        print(f'Item: {inventory(n)(0)}|Tipo: {inventory(n)(1)}')
 
-    if hp_Enemy <= 0:
-        print(f'O {enemy[0]} morreu')
+def action()-> str:
+    action_List = ['attack', 'inventory', 'run']
+    action_Select = None
+    while action_Select not in action_List: 
+        print('---Seu turno!---')
+        print('Attack')
+        print('Inventory')
+        print('Run')
+        action_Select = input('Escolha sua ação: ').lower()
+        return action_Select   
+
+def fight(): # Função principal do combate no fácil
+    enemy = easy.random_Enemy()
+    hp_Player = hp_Ready(character.hp, character.stats['body'])
+    print(f'Seu inimigo é {enemy['name']}')
+
+    while enemy['hp'] > 0 and hp_Player > 0: # Verifica se alguém tem a vida menor do que 0
+        action_Select = action()
+        if action_Select == 'run':
+            run = running(character.stats['speed'], enemy['stats'][2])
+            if run == 'success':
+                print('Você conseguiu escapar')
+                live_Death = 'vivo'
+                loot_Challenge = None           
+                return live_Death, loot_Challenge
+            else:
+                print('Você não conseguiu escapar')
+        if action_Select == 'inventory':
+            check_inventory(character.inventory)
+        if action_Select == 'attack':
+            total_Damage = Attack(character.stats['strength'], enemy['armor'], character.player_Weapon[1], character.player_Weapon[2])
+            enemy['hp'] -= total_Damage
+            print(f'A vida do seu inimigo é {enemy['hp']}') 
+        if enemy['hp'] <= 0: # Verifica se o inimigo morreu
+            break
+        print(f'---Turno do {enemy['name']}---')   # Turno do inimigo
+        total_Damage = Attack(enemy['stats'][0], character.armor, enemy['weapon'][0], enemy['weapon'][1])
+        hp_Player -= total_Damage
+        print(f'A sua vida é {hp_Player}')
+        if hp_Player <= 0:    # Verifica a vida do player
+            break
+    if enemy['hp'] <= 0:
+        print(f'O {enemy['name']} morreu')
         print(f'Você sobreviveu com {hp_Player} de HP')
         live_Death = 'vivo'
         loot_Challenge = 'easy'
         return live_Death, loot_Challenge
-    elif hp_Enemy > 0:
+    elif enemy['hp'] > 0:
         print(f'Você morreu')
         live_Death = 'morto'
-        loot_Challenge = None
+        loot_Challenge = 'no'
         return live_Death, loot_Challenge
     else:
         live_Death = 'vivo'
-        loot_Challenge = None
+        loot_Challenge = 'no'
         return live_Death, loot_Challenge
     
 # Sistema de Loot
@@ -303,8 +244,8 @@ def loot_Chance()->str:
 
 def which_Loot(loot_Challenge: str) -> str:
     if loot_Challenge == 'easy':
-        loot_Selected = random.randrange(len(easy.easy_Loot_List))  # randrange gera um índice de 0 até len-1
-        loot = easy.easy_Loot_List[loot_Selected]
+        loot_Selected = random.randrange(len(easy.easy_Loots))  # randrange gera um índice de 0 até len-1
+        loot = easy.easy_Loots[loot_Selected]
         return loot
 
 # Escolha de dificuldade
@@ -318,8 +259,8 @@ while live_Death != 'morto':
         print('Easy')
         difficulty_Select = input('Dificuldade: ').lower()
     if difficulty_Select == 'easy':
-        live_Death, loot_Challenge = easy_Fight()
-    if loot_Challenge != None:
+        live_Death, loot_Challenge = fight()
+    if loot_Challenge != 'no':
         have_Loot = loot_Chance()
         if have_Loot == 'yes':
             loot = which_Loot(loot_Challenge)
